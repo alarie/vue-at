@@ -32,6 +32,14 @@
       </div>
     </div>
     <slot></slot>
+    <div ref="insertWrap" style="display:none">
+      <slot name="insert"
+        v-if="insertedItem"
+        :item="insertedItem"
+      >
+        <span v-text="itemName(insertedItem)"></span>
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -84,6 +92,7 @@ export default {
   data () {
     return {
       hasComposition: false,
+      insertedItem: null,
       atwho: null
     }
   },
@@ -291,7 +300,14 @@ export default {
       // hack: 连续两次 可以确保click后 focus回来 range真正生效
       applyRange(r)
       applyRange(r)
-      document.execCommand('insertText', 0, itemName(list[cur]) + ' ')
+
+      this.insertedItem = list[cur]
+      this.$nextTick(() => {
+        // todo: make '&nbsp;' configurable
+        const html = this.$refs.insertWrap.innerHTML.trim() + '&nbsp;'
+        console.log('html', `"${html}"`)
+        document.execCommand('insertHtml', 0, html)
+      })
     }
   }
 }

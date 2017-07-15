@@ -12,6 +12,10 @@
         <span v-text="s.item.name"></span>
       </template>
 
+      <template slot="insert" scope="s">
+        <span v-text="s.item.name"></span>
+      </template>
+
       <div class="editor"
         contenteditable
         v-html="html"></div>
