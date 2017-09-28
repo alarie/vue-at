@@ -89,6 +89,9 @@ export default {
     },
     atwho (val) {
       this.$emit('has-at', !!val)
+    },
+    members () {
+      this.handleInput(true)
     }
   },
 
@@ -176,7 +179,7 @@ export default {
       this.hasComposition = false
       this.handleInput()
     },
-    handleInput () {
+    handleInput (keep) {
       if (this.hasComposition) return
       const range = getPrecedingRange()
       if (range) {
@@ -209,12 +212,15 @@ export default {
           this.closePanel()
         } else {
           const { members, filterMatch, itemName } = this
+          if (!keep) {
+            this.$emit('at', chunk)
+          }
           const matched = members.filter(v => {
             const name = itemName(v)
             return filterMatch(name, chunk, at)
           })
           if (matched.length) {
-            this.openPanel(matched, range, index, at)
+            this.openPanel(matched, range, index, at, keep)
           } else {
             this.closePanel()
           }
@@ -227,19 +233,20 @@ export default {
         this.atwho = null
       }
     },
-    openPanel (list, range, offset, at) {
+    openPanel (list, range, offset, at, keep) {
       const fn = () => {
         const r = range.cloneRange()
         r.setStart(r.endContainer, offset + at.length) // 从@后第一位开始
         // todo: 根据窗口空间 判断向上或是向下展开
         const rect = r.getClientRects()[0]
+        let lastCur = this.atwho && this.atwho.cur || 0
         this.atwho = {
           range,
           offset,
           list,
           x: rect.left,
           y: rect.top - 4,
-          cur: 0, // todo: 尽可能记录
+          cur: 0 // todo: 尽可能记录
         }
       }
       if (this.atwho) {
