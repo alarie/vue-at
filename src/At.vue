@@ -159,10 +159,6 @@ export default {
         }
       }
 
-      const isChar = e.keyCode >= 48 && e.keyCode <= 90
-      if (isChar) {
-        setTimeout(this.handleInput, 50)
-      }
 
       if (e.keyCode === 8) {
         this.handleDelete(e)
