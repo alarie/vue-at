@@ -38,7 +38,7 @@
 <script>
 import {
   closest, getOffset, getPrecedingRange,
-  getRange, applyRange, 
+  getRange, applyRange,
   scrollIntoView
 } from './util'
 
@@ -92,9 +92,15 @@ export default {
           const offset = getOffset(wrap)
           const left = x + window.pageXOffset - offset.left + 'px'
           const top = y + window.pageYOffset - offset.top + 'px'
+
+          this.$emit("open")
+
           return { left, top }
         }
       }
+
+      this.$emit("close")
+
       return null
     }
   },
