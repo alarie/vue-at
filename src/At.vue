@@ -1,7 +1,7 @@
 <script>
 import {
   closest, getOffset, getPrecedingRange,
-  getRange, applyRange, 
+  getRange, applyRange,
   scrollIntoView, getAtAndIndex
 } from './util'
 import AtTemplate from './AtTemplate.vue'
@@ -68,7 +68,7 @@ export default {
     atItems () {
       return this.at ? [this.at] : this.ats
     },
-    
+
     style () {
       if (this.atwho) {
         const { list, cur, x, y } = this.atwho
@@ -77,9 +77,15 @@ export default {
           const offset = getOffset(wrap)
           const left = x + window.pageXOffset - offset.left + 'px'
           const top = y + window.pageYOffset - offset.top + 'px'
+
+          this.$emit('open')
+
           return { left, top }
         }
       }
+      
+      this.$emit('close')
+
       return null
     }
   },
@@ -182,10 +188,10 @@ export default {
       const range = getPrecedingRange()
       if (range) {
         const { atItems, avoidEmail, allowSpaces } = this
-        
+
         let show = true
         const text = range.toString()
-  
+
         const { at, index } = getAtAndIndex(text, atItems)
 
         if (index < 0) show = false
@@ -202,7 +208,7 @@ export default {
         if (!allowSpaces && /\s/.test(chunk)) {
           show = false
         }
-      
+
         // chunk以空白字符开头不匹配 避免`@ `也匹配
         if (/^\s/.test(chunk)) show = false
 
